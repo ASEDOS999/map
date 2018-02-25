@@ -126,23 +126,16 @@ struct map_enter* hash_prev(struct map* this_map, struct map_enter* d){
 		printf("Element with this key doesn't exist");
 		return NULL;
 	}
-	elem* prev = NULL;
-	while(el->key != key && el->next != NULL){
-		prev = el;
+	while(el->key != key && el->next != NULL)
 		el = (elem*)el->next;
-	}
 	if(el->key != key && el->next == NULL){
 		printf ("Element with this key doesn't exist");
 		return NULL;
 	}
-	if (prev == NULL){
+	k = (k + H - 1) % H;
+	while((arr[k]) == NULL)
 		k = (k + H - 1) % H;
-		while((arr[k]) == NULL)
-			k = (k + H - 1) % H;
-		return (struct map_enter*)arr[k];
-	}
-	else
-		return (struct map_enter*)prev;
+	return (struct map_enter*)arr[k];
 
 }
 
@@ -150,15 +143,11 @@ struct map_enter* hash_next(struct map* this_map, struct map_enter* d){
 	elem* d_new = (elem*)d;
 	data* key = d_new->key;
 	elem* el = (elem*)hash_search(this_map, key);
-	if(el->next == NULL){
-		int k = (hashing(key)+1) % H;
-		hash* m = (hash*)this_map;
-		elem** arr = (elem**)m->start;
-		while((arr[k]) == NULL)
-			k=(k + 1) % H;
-		return (struct map_enter*)arr[k];
-	}
-	else
-		return el->next;
+	int k = (hashing(key)+1) % H;
+	hash* m = (hash*)this_map;
+	elem** arr = (elem**)m->start;
+	while((arr[k]) == NULL)
+		k=(k + 1) % H;
+	return (struct map_enter*)arr[k];
 }
 
