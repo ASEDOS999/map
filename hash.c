@@ -20,18 +20,22 @@ int hashing(data* key){		//it is hash function
 
 void list_delete(struct map* this_map, int a){
 	hash* m = (hash*) this_map;
-	elem* el = ((elem*)m->start + a * (sizeof(elem)));
-	while (el->next != NULL){
-		elem* nel = (elem*)el->next;
-		free(el);
-		el = nel;
-	}
+	elem* el = *((elem**)m->start + a * (sizeof(elem*)));
+	if(el == NULL)  //the list is empty
+		return;
+	while(el->next != NULL)
+		free((elem*)el->next);
 	free(el);
 	return;
 }
 
 struct map* hash_create(int (*hashing)(data* key)){
-	map* m = malloc(sizeof(hash));
+	map* m;
+	if( (m = (map*)malloc(sizeof(hash))) == NULL)
+	{
+		perror("(hash_create, 41)malloc for m");
+		return NULL;
+	}
 	m->insert = hash_insert;
 	m->delet = hash_delete;
 	m->search = hash_search;
@@ -39,7 +43,11 @@ struct map* hash_create(int (*hashing)(data* key)){
 	m->get_next = hash_next;
 	m->get_prev = hash_prev;
 	hash* ha = (hash*) m;
-	ha->start = (map_enter**)malloc(H * sizeof(elem*));
+	if((ha->start = (map_enter**)malloc(H * sizeof(elem*))) == NULL)
+	{
+		perror("(hash_create, 46)malloc for ha->start");
+		return NULL;
+	}
 	ha->hashing = hashing;
 	return (struct map*) m;
 }
@@ -47,13 +55,15 @@ struct map* hash_create(int (*hashing)(data* key)){
 void hash_insert(struct map* this_map, data* ent){
 	elem* ent_new = (elem*)ent->value;
 	hash* m = (hash*) this_map;
-	elem* el = *((elem**)m->start+hashing(ent_new->key) * sizeof(elem*));
-	while (el->next != NULL)
-		el = (elem*)el->next;
-	if ((el->next = (map_enter*)malloc(sizeof(elem))) == NULL)
-		perror("(hash_insert)Return value of malloc equals NULL");
-	el = (elem*)el->next;
-	el->next = NULL;
+	elem* el = *((elem**)m->start+hashing(ent_new->key) * sizeof(elem*)); //pointer to start of list
+	map_enter* next_el;
+	if(el != NULL)//list is not empty
+		next_el = el->next;
+	else
+		next_el = NULL;
+	if((el = (elem*)malloc(sizeof(elem*))) == NULL)
+		perror("(hash_insert) malloc for el");
+	el->next = next_el;
 	el->value = ent_new->value;
 	el->key = ent_new->key;
 	return;
@@ -64,7 +74,7 @@ void hash_delete(struct map* this_map){
 	for (i = 0; i < H; i++)
 		list_delete(this_map, i);
 	hash* m = (hash*) this_map;
-	free(m->start);
+	free((elem*)m->start);
 	free(m);
 	return;
 }
