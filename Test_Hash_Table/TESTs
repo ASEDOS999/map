@@ -1,5 +1,5 @@
-1. create_one_HT.c
-2. delete_one_HT.c
-3. create_delete.c
-4. test_insert.c
-5. insert_different_table
+1. create_one_HT.c - to create a hash table (hash_create)
+2. delete_one_HT.c - to delete a created hash_table (hash_delete) 
+3. create_delete.c - to create and to delete a random number of hash table (hash_delete and hash_create)
+4. test_insert.c - to insert a random number of data to a hash_table (hash_insert)
+5. insert_different_table - to insert a random number of data to a random number of hash_tables (hash_insert)
