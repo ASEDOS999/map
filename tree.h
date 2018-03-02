@@ -1,13 +1,14 @@
 #ifndef __tree__
 	#define __tree__
 	#include "map.h"
+	#define _branch_methods \
+		 _map_enter_methods;\
+                struct map_enter* prev;\
+                struct map_enter* left;\
+                struct map_enter* right;\
+                data* value;
 	struct branch{
-		_map_enter_methods;
-	//					struct branch* prev; struct branch* left; struct branch* right;
-		struct map_enter* prev;
-		struct map_enter* left;
-		struct map_enter* right;
-		data* value;
+		_branch_methods;
 	}typedef branch;
 	struct tree{
 		_map_methods;

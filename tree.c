@@ -84,7 +84,8 @@ struct map_enter* branch_search(struct map_enter * me, data* d, int (*data_cmp)(
 	branch* br = (branch*)me;
 	if(br == NULL)
 		return NULL;
-	if(data_cmp(br->value, d) == 1)
+//	printf("LOG SEARCH %d\n", *(int *)(br->value));
+	if(data_cmp(br->value, d) == 0)
 		return (map_enter *)br;
 	if(data_cmp(br->value, d) < 0)
 		return branch_search(br->left, d, data_cmp);
@@ -105,13 +106,13 @@ struct map_enter* tree_prev(struct map* this_map, struct map_enter* br){
 		if( ((branch*)((branch*)temp)->prev)->right == temp)
 			return ((branch*)temp)->prev;
 	return NULL;		
-	/*если у нас есть левый ребёнок
-		то пишем самого правого его потомка
-	иначе
-		если мы правый ребёнок то
-			пишем родителя
-		иначе
-			ищем момент, когда наш предок чейто правый ребёнок*/
+	//если у нас есть левый ребёнок
+	//	то пишем самого правого его потомка
+	//иначе
+	//	если мы правый ребёнок то
+	//		пишем родителя
+	//	иначе
+	//		ищем момент, когда наш предок чейто правый ребёнок
 }
 struct map_enter* tree_next(struct map* this_map, struct map_enter* br){
 	map_enter* temp;
@@ -165,6 +166,17 @@ void tree_remove(struct map* this_map, struct map_enter* br){
 	}	
 	free(br);
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 struct map* hash_create(){
