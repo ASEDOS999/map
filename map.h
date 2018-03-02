@@ -1,3 +1,7 @@
+#ifdef cplusplus
+	extern "C"{
+#endif
+
 #ifndef __map__
 	#define __map__
 	struct _data{
@@ -14,7 +18,11 @@
 		struct map_enter* (*search)(struct map* this_map, data* d);\
 		void (*remove)(struct map* this_map, map_enter *);\
 		struct map_enter* (*get_next)(struct map* this_map, struct map_enter* );\
-		struct map_enter* (*get_prev)(struct map* this_map, struct map_enter* );// last 3 positions ?????
+		struct map_enter* (*get_prev)(struct map* this_map, struct map_enter* );\// last 3 positions ?????
+		struct map_enter* first(struct map* this_map);\
+		struct mao-enter* last(struct map* this_map);\
+		struct map_enter* end(struct map* this_map);
+
 	struct map{
 		_map_methods;
 	} typedef map;
@@ -23,4 +31,9 @@
 		TREE;
 		HASH;
 	};*/
+#endif
+
+
+#ifdef cplusplusend
+	}
 #endif
