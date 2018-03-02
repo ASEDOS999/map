@@ -26,14 +26,9 @@
 	struct map{
 		_map_methods;
 	} typedef map;
-
-/*	enum map_type{	//is it realy needable????
-		TREE;
-		HASH;
-	};*/
 #endif
 
 
-#ifdef cplusplus
+#ifdef __cplusplus
 	}
 #endif
