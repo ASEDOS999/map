@@ -6,7 +6,7 @@
 	#define __map__
 	struct _data{
 		void* value;
-	}typedef data; //////WHAT?????
+	}typedef struct _data *data;
 	#define _map_enter_methods
 	struct map_enter{
 		_map_enter_methods;
