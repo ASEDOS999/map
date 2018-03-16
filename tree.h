@@ -16,7 +16,7 @@
 		struct map_enter* root;  //////////<- about enters
 	}typedef tree;
 	struct map* tree_create( int (*data_cmp)(data* a, data* b));
-	void tree_insert(struct map* this_map, data* d);
+	struct map_enter* tree_insert(struct map* this_map, data* d);
 	void tree_delete(struct map* this_map);
 	struct map_enter* tree_search(struct map * this_map, data* d);
 	struct map_enter* tree_prev(struct map* this_map, struct map_enter* );
