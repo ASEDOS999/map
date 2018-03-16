@@ -14,7 +14,7 @@
 	} typedef map_enter;
 
 	#define _map_methods \
-		void (*insert)(struct map* this_map, data * d);\
+		struct map_enter* (*insert)(struct map* this_map, data * d);\
 		void (*delet)(struct map* this_map);\
 		struct map_enter* (*search)(struct map* this_map, data* d);\
 		void (*remove)(struct map* this_map, map_enter *);\
