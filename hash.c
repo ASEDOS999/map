@@ -45,6 +45,8 @@ struct map* hash_create(int (*hashing)(data* key)){
 	m->remove = hash_remove;
 	m->get_next = hash_next;
 	m->get_prev = hash_prev;
+	m->first = hash_first;
+	m->last = hash_last;
 	hash* ha = (hash*) m;
 	if((ha->start = (map_enter**)malloc(H * sizeof(elem*))) == NULL)
 	{
@@ -55,7 +57,7 @@ struct map* hash_create(int (*hashing)(data* key)){
 	return (struct map*) m;
 }
 
-void hash_insert(struct map* this_map, data* ent){
+struct map_enter* hash_insert(struct map* this_map, data* ent){
 	elem* ent_new = (elem*)ent->value;
 	hash* m = (hash*) this_map;
 	elem** beg = (elem**)m->start;
@@ -68,9 +70,11 @@ void hash_insert(struct map* this_map, data* ent){
 	if((beg[k] = (elem*)malloc(sizeof(elem))) == NULL)
 		perror("(hash_insert) malloc for el");
 	beg[k]->next = next_el;
-	beg[k]->value = ent_new->value;
-	beg[k]->key = ent_new->key;
-	return;
+	beg[k]->value = malloc(sizeof(data));
+	*beg[k]->value = *ent_new->value;
+	beg[k]->key = malloc(sizeof(data));
+	*((int*)beg[k]->key) = *((int*)ent_new->key);
+	return (struct map_enter*)beg[k];
 }
 
 void hash_delete(struct map* this_map){
@@ -108,7 +112,7 @@ void hash_remove(struct map* this_map, struct map_enter* d){
 	}
 	elem* prev = NULL;
 
-	while (el->key != key || el == NULL){
+	while ((*(int*)el->key) != (*(int*)key) || el == NULL){
 		elem* prev = el;
 		el = (elem*)el->next;
 	}
@@ -137,6 +141,15 @@ struct map_enter* hash_prev(struct map* this_map, struct map_enter* d){
 	int k = hashing(key);
 	hash* m = (hash*)this_map;
 	elem** beg = (elem**)m->start;
+	if((*(int*)beg[k]->key) != (*(int*)key))
+	{
+		elem* i = (elem*)beg[k]->next;
+		elem* prev = beg[k];
+		while((*(int*)i->key) != (*(int*)key))
+			i = (elem*)i->next;
+		return (struct map_enter*) prev;
+	}
+
 	k = (k + H - 1) % H;
 	while(beg[k] == NULL)
 		k = (k + H - 1) % H;
@@ -146,12 +159,41 @@ struct map_enter* hash_prev(struct map* this_map, struct map_enter* d){
 struct map_enter* hash_next(struct map* this_map, struct map_enter* d){
 	elem* d_new = (elem*)d;
 	data* key = d_new->key;
-	int k = (hashing(key)+1) % H;
+	if (d_new->next != NULL)
+		return (struct map_enter*)d_new->next;
+
+	int k = (hashing(key) + 1) %H;
 	hash* m = (hash*)this_map;
 	elem** beg = (elem**)m->start;
-	k = (k + 1) % H;
+
 	while(beg[k] == NULL)
 		k=(k + 1) % H;
 	return (struct map_enter*)beg[k];
 }
 
+struct map_enter* hash_first(struct map* this_map){
+	hash* m = (hash*)this_map;
+	elem** beg = (elem**)m->start;
+	int k = 0;
+	while (k < H && beg[k] == NULL)
+		k++;
+	if (k == H)
+		return NULL; //table is empty
+	else
+		return (struct map_enter*)beg[k];
+
+}
+
+struct map_enter* hash_last(struct map* this_map){
+	hash* m = (hash*)this_map;
+	elem** beg = (elem**)m->start;
+	int k = H-1;
+	while(k >= 0 && beg[k] == NULL)
+		k--;
+	if(k < 0)
+		return NULL; //table is empty
+	elem* i = beg[k];
+	while(i->next != NULL) //go to the end of list
+		i = (elem*)i->next;
+	return (struct map_enter*)i;
+}

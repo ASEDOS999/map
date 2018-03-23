@@ -21,10 +21,14 @@
 	void list_delete(struct map* this_map, int a);
 
 	struct map* hash_create( int (*hashing)(data* key));
-	void hash_insert(struct map* this_map, data* ent);
+	struct map_enter* hash_insert(struct map* this_map, data* ent);
 	void hash_delete(struct map* this_map);
 	struct map_enter* hash_search(struct map * this_map, data* key);
 	void hash_remove(struct map* this_map, struct map_enter* d);
 	struct map_enter* hash_prev(struct map* this_map, struct map_enter* d);
 	struct map_enter* hash_next(struct map* this_map, struct map_enter* d);
+
+	struct map_enter* hash_first(struct map* this_map);
+	struct map_enter* hash_last(struct map* this_map);
+
 #endif
