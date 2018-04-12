@@ -38,11 +38,18 @@ struct map* tree_create( int (*data_cmp)(data* a, data* b)){
 		struct tree* tr = (struct tree *)m;
 		tr->root = NULL;
 		tr->data_cmp = data_cmp;
+		tr->end = tree_end;
+		tr->first = tree_first;
+		tr->last = tree_last;
 		return m;
 }
-void branch_insert(map_enter* sub, map_enter* obj, int (*data_cmp)(data* a, data* d)){
+
+///////доделай возвращени!!!!
+/*map_enter* branch_insert(map_enter* sub, map_enter* obj, int (*data_cmp)(data* a, data* d)){
 	branch* _sub = (branch *)sub;
 	branch* _obj = (branch *)obj;
+	if(data_cmp(_sub->value, _obj->value) == 0)
+		return sub;
 	if(data_cmp(_sub->value, _obj->value) < 0){
 		if(_sub->left == NULL){
 			_sub->left = obj;
@@ -60,13 +67,58 @@ void branch_insert(map_enter* sub, map_enter* obj, int (*data_cmp)(data* a, data
 			branch_insert(_sub->right, obj, data_cmp);
 	}
 }
+//#define tree_from(x) tree* this_tree = (tree*)x
+
 void tree_insert(struct map* this_map, data* d){
+//	tree_from(this_map);
 		map_enter* br = branch_create(NULL, NULL, NULL, d);
+		map_enter* brret;
 		if(((tree*)this_map)->root == NULL)
 			((tree*)this_map)->root = br;
 		else
 			branch_insert(((tree*)this_map)->root, br, ((tree*)this_map)->data_cmp);
+}*/
+
+map_enter*  branch_insert(map_enter* sub, map_enter* obj, int (*data_cmp)(data* a, data* d)){
+	branch* _sub = (branch *)sub;
+	branch* _obj = (branch *)obj;
+	if(data_cmp(_sub->value, _obj->value) == 0){
+		return sub;
+	}
+	if(data_cmp(_sub->value, _obj->value) < 0){
+		if(_sub->left == NULL){
+			_sub->left = obj;
+			_obj->prev = sub;
+			return NULL;
+		}
+		else
+			return branch_insert(_sub->left, obj, data_cmp);
+	}
+	else{
+		if(_sub->right == NULL){
+			_sub->right = obj;
+			_obj->prev = sub;
+			return NULL;
+		}
+		else
+			return branch_insert(_sub->right, obj, data_cmp);
+	}
 }
+map_enter* tree_insert(struct map* this_map, data* d){
+		map_enter* br = branch_create(NULL, NULL, NULL, d);
+		if(((tree*)this_map)->root == NULL){
+			((tree*)this_map)->root = br;
+			return br;
+		}
+		else{
+			map_enter* tbr = branch_insert(((tree*)this_map)->root, br, ((tree*)this_map)->data_cmp);
+			if(tbr == NULL)
+				return br;
+			free(br);
+			return tbr;
+		}
+}
+
 void branch_delete(struct map_enter* br){
 	branch * _br = (branch *)br;
 	if(_br == NULL)
@@ -161,15 +213,32 @@ void tree_remove(struct map* this_map, struct map_enter* br){
 		if(((branch *)br)->left != NULL){
 			*direct = ((branch *)br)->left;
 			((branch *)((branch *)br)->left)->prev = ((branch *)br)->prev;
-		}
-		*direct = NULL;
+		}else
+			*direct = NULL;
 	}	
 	free(br);
 }
-
-
-
-
+struct map_enter* tree_first(struct map* this_map){
+	tree* tr = (tree*)this_map;
+	map_enter* me = tr->root;
+	if(me == NULL)
+		return NULL;
+	while(((branch*)me)->left != NULL)
+		me = ((branch*)me)->left;
+	return me;
+}
+struct map_enter* tree_last(struct map* this_map){
+	tree* tr = (tree *)this_map;
+	map_enter* me = tr->root;
+	if(me == NULL)
+		return NULL;
+	while(((branch*)me)->right != NULL)
+		me = ((branch*)me)->right;
+	return me;
+}
+struct map_enter* tree_end(struct map* this_map){
+	return NULL;
+}
 
 
 

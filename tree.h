@@ -22,6 +22,9 @@
 	struct map_enter* tree_prev(struct map* this_map, struct map_enter* );
 	struct map_enter* tree_next(struct map* this_map, struct map_enter* );
 	void tree_remove(struct map* this_map, struct map_enter* );
+	struct map_enter* tree_first(struct map* this_map);
+	struct map_enter* tree_last(struct map* this_map);
+	struct map_enter* tree_end(struct map* this_map);
 #endif
 // OLD
 /*#ifndef __tree__

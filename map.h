@@ -6,8 +6,8 @@
 	#define __map__
 	struct _data{
 		void* value;
-	}typedef data;
-//	typedef struct _data *data;
+	};
+	typedef struct _data *data;
 	#define _map_enter_methods
 	struct map_enter{
 		_map_enter_methods;
@@ -21,7 +21,7 @@
 		struct map_enter* (*get_next)(struct map* this_map, struct map_enter* );\
 		struct map_enter* (*get_prev)(struct map* this_map, struct map_enter* );\
 		struct map_enter* (*first)(struct map* this_map);\
-		struct map_enter* (*last)(struct map* this_map);
+		struct map_enter* (*last)(struct map* this_map);\
 		struct map_enter* (*end)(struct map* this_map);
 
 	struct map{
