@@ -7,8 +7,10 @@
 	struct _data{
 		void* value;
 	};
-	typedef struct _data *data;
-	#define _map_enter_methods
+	typedef struct _data* *data;
+	
+	#define _map_enter_methods	data* (*get_val)(struct map_enter*);
+	
 	struct map_enter{
 		_map_enter_methods;
 	} typedef map_enter;

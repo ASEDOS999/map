@@ -17,8 +17,12 @@
 	br->left = left;
 	br->right = right;
 }*/   // about enter
+data* branch_get_value(map_enter* me){
+	return ((branch*)me)->value;
+}
 struct map_enter* branch_create(struct map_enter* prev, struct map_enter* left, struct map_enter* right, data * d){
 	struct map_enter* me = malloc(sizeof(struct branch));
+	me->get_val = branch_get_value;
 	struct branch* br = (struct branch*)me;
 	br->value = d;
 	br->prev = prev;
