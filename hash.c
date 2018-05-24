@@ -12,6 +12,8 @@
 
 
 data* get_value(struct map_enter* el){
+	if (el == NULL)
+		return NULL;
 	return ((elem*)el)->value;
 }
 
@@ -100,7 +102,7 @@ struct map_enter* hash_search(struct map* this_map, data* key){
 	hash* m = (hash*) this_map;
 	elem** beg = (elem**)m->start;
 	elem* el = beg[m->hashing(key)];
-	while (!(m->equal(key, el->value)))
+	while ((!(m->equal(key, el->value))) && (el != NULL))
 		el = (elem*)el->next;
 	return (struct map_enter*) el;
 }
@@ -173,6 +175,8 @@ struct map_enter* hash_prev(struct map* this_map, struct map_enter* d){
 
 struct map_enter* hash_next(struct map* this_map, struct map_enter* d){
 	elem* d_new = (elem*)d;
+	if(d_new == NULL)
+		return NULL;
 	data* key = d_new->value;
 	if (d_new->next != NULL)
 		return (struct map_enter*)d_new->next;
