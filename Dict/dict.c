@@ -9,12 +9,16 @@
 
 int hashing(data* key)
 {
-	return 0;
+	char* s = (char*)key;
+	int sum = 0, i;
+	for(i = 0; i < LEN; i++)
+		sum = sum + s[i];
+	return sum;
 }
 
 int key_equal(data* key1, data* key2)
 {
-	return 0;
+	return !(strcmp((char*)key1, (char*)key2));
 }
 
 int main(int ac, char** name)
