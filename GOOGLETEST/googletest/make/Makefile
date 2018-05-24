@@ -17,7 +17,7 @@
 GTEST_DIR = ..
 
 # Where to find user code.
-USER_DIR = ../../../gtest_hash
+USER_DIR = ../../../TEST_MAP
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
@@ -29,7 +29,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = TEST_HASH
+TESTS = TEST_MAP
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -74,9 +74,13 @@ gtest_main.a : gtest-all.o gtest_main.o
 hash.o : $(USER_DIR)/../hash.c $(USER_DIR)/../hash.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/../hash.c
 
-TEST_HASH.o : $(USER_DIR)/TEST_HASH.cc \
-                     $(USER_DIR)/../hash.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/TEST_HASH.cc
+tree.o : $(USER_DIR)/../tree.c $(USER_DIR)/../tree.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/../tree.c
 
-TEST_HASH : hash.o TEST_HASH.o gtest_main.a
+TEST_MAP.o : $(USER_DIR)/TEST_MAP.cc \
+     			$(USER_DIR)/../hash.h $(GTEST_HEADERS) \
+     				$(USER_DIR)/../tree.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/TEST_MAP.cc
+
+TEST_MAP : tree.o hash.o TEST_MAP.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
