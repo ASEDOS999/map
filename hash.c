@@ -32,6 +32,8 @@ void list_delete(struct map* this_map, int a){
 }
 
 struct map* hash_create(int (*hashing)(data* key), int (*key_equal)(data* key_1, data* key_2)){
+	if ((hashing == NULL)||(key_equal == NULL))
+		return NULL;
 	map* m;
 	if( (m = (map*)malloc(sizeof(hash))) == NULL){
 		perror("(hash_create, 41)malloc for m");
@@ -53,7 +55,6 @@ struct map* hash_create(int (*hashing)(data* key), int (*key_equal)(data* key_1,
 		return NULL;
 	}
 	int i;
-	elem** beg = (elem**)ha->start;
 	for (i = 0; i < H; i++)
 		ha->start[i] = NULL;
 	ha->hashing = hashing;
@@ -63,6 +64,8 @@ struct map* hash_create(int (*hashing)(data* key), int (*key_equal)(data* key_1,
 
 int unique(struct map* this_map, data* key){
 	struct map_enter* i;
+	if((this_map == NULL)||(key == NULL))
+		return 0;
 	for(i = this_map->first(this_map); i != this_map->end(this_map); i = this_map->get_next(this_map, i))
 		if(((hash*)this_map)->equal(((elem*)i)->value, key))
 			return 0;
@@ -70,6 +73,8 @@ int unique(struct map* this_map, data* key){
 }
 
 struct map_enter* hash_insert(struct map* this_map, data* ent){
+	if((this_map == NULL) || (ent == NULL))
+		return NULL;
 	int k = ((hash*)this_map)->hashing(ent) % H; //pointer to start of list
 	map_enter* next_el = NULL;
 	elem** beg = (elem**)((hash*)this_map)->start;
@@ -91,6 +96,8 @@ struct map_enter* hash_insert(struct map* this_map, data* ent){
 void hash_delete(struct map* this_map){
 	int i;
 	hash* m = (hash*) this_map;
+	if(m == NULL)
+		return;
 	for (i = 0; i < H; i++)
 		list_delete(this_map, i);
 	free((elem**)m->start);
@@ -99,6 +106,8 @@ void hash_delete(struct map* this_map){
 }
 
 struct map_enter* hash_search(struct map* this_map, data* key){
+	if((this_map == NULL)||(key == NULL))
+		return NULL;
 	hash* m = (hash*) this_map;
 	elem** beg = (elem**)m->start;
 	elem* el = beg[m->hashing(key)];
@@ -111,8 +120,7 @@ void hash_remove(struct map* this_map, struct map_enter* d){
 	elem* d_new = (elem*)d;
 	data* key = d_new->value;
 	hash* m = (hash*) this_map;
-	if (m == NULL){
-		printf("This map doesn't exist");
+	if ((m == NULL)||(d == NULL)){
 		return;
 	}
 	elem** beg = (elem**)m->start;
@@ -124,7 +132,7 @@ void hash_remove(struct map* this_map, struct map_enter* d){
 	elem* prev = NULL;
 
 	while (!(m->equal(key, el->value)) || el == NULL){
-		elem* prev = el;
+		prev = el;
 		el = (elem*)el->next;
 	}
 
@@ -147,6 +155,8 @@ void hash_remove(struct map* this_map, struct map_enter* d){
 }
 
 struct map_enter* hash_prev(struct map* this_map, struct map_enter* d){
+	if((this_map == NULL)||(d == NULL))
+		return NULL;
 	elem* d_new = (elem*)d;
 	data* key = d_new->value;
 	hash* m = (hash*)this_map;
@@ -174,6 +184,8 @@ struct map_enter* hash_prev(struct map* this_map, struct map_enter* d){
 }
 
 struct map_enter* hash_next(struct map* this_map, struct map_enter* d){
+	if((this_map == NULL)||(d == NULL))
+		return NULL;
 	elem* d_new = (elem*)d;
 	if(d_new == NULL)
 		return NULL;
@@ -194,6 +206,8 @@ struct map_enter* hash_next(struct map* this_map, struct map_enter* d){
 }
 
 struct map_enter* hash_first(struct map* this_map){
+	if(this_map == NULL)
+		return NULL;
 	elem** beg = (elem**)((hash*)this_map)->start;
 	int k = 0;
 	while (k < H && beg[k] == NULL)
@@ -206,6 +220,8 @@ struct map_enter* hash_first(struct map* this_map){
 }
 
 struct map_enter* hash_last(struct map* this_map){
+	if(this_map == NULL)
+		return NULL;
 	hash* m = (hash*)this_map;
 	elem** beg = (elem**)m->start;
 	int k = H-1;
