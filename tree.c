@@ -21,7 +21,7 @@ data* branch_get_value(map_enter* me){
 	return ((branch*)me)->value;
 }
 struct map_enter* branch_create(struct map_enter* prev, struct map_enter* left, struct map_enter* right, data * d){
-	struct map_enter* me = malloc(sizeof(struct branch));
+	struct map_enter* me = (struct map_enter*)malloc(sizeof(struct branch));
 	me->get_val = branch_get_value;
 	struct branch* br = (struct branch*)me;
 	br->value = d;
@@ -32,7 +32,7 @@ struct map_enter* branch_create(struct map_enter* prev, struct map_enter* left, 
 }
 
 struct map* tree_create( int (*data_cmp)(data* a, data* b)){
-		struct map* m = malloc(sizeof(struct tree));
+		struct map* m = ( map*)malloc(sizeof(struct tree));
 		m->insert = tree_insert;
 		m->delet = tree_delete;
 		m->search = tree_search;
@@ -119,7 +119,7 @@ map_enter* tree_insert(struct map* this_map, data* d){
 			if(tbr == NULL)
 				return br;
 			free(br);
-			return tbr;
+			return NULL;
 		}
 }
 
@@ -153,6 +153,11 @@ struct map_enter* tree_search(struct map * this_map, data* d){
 }
 struct map_enter* tree_prev(struct map* this_map, struct map_enter* br){
 //	branch * br = (branch *)br;
+
+
+	if(br == NULL)
+		return NULL;
+
 	map_enter* temp;
 	if(((branch *)br)->left != NULL){
 		for(temp = ((branch *)br)->left; ((branch *)temp)->right != NULL; temp = ((branch*)temp)->right);
@@ -171,6 +176,10 @@ struct map_enter* tree_prev(struct map* this_map, struct map_enter* br){
 	//		ищем момент, когда наш предок чейто правый ребёнок
 }
 struct map_enter* tree_next(struct map* this_map, struct map_enter* br){
+	
+	if(br == NULL)
+		return NULL;
+
 	map_enter* temp;
 	if(((branch *)br)->right != NULL){
 		for(temp = ((branch *)br)->right; ((branch*)temp)->left != NULL; temp = ((branch*)temp)->left);
