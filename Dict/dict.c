@@ -23,12 +23,7 @@ int key_equal(data* key1, data* key2)
 
 int main(int ac, char** name)
 {
-	FILE* f;
-	if (ac == 2)
-		f = fopen(name[1], "r");
-	else
-		f = fopen("input.txt", "r");
-
+	FILE* f = stdin;
 	map* T = hash_create(hashing, key_equal);
 	char c, *string;
 	int in_word = 0;
