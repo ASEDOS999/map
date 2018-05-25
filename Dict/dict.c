@@ -7,9 +7,14 @@
 //The most length of words in text:
 #define LEN 80
 
+struct element{
+	char* str;
+	int val;
+};
+
 int hashing(data* key)
 {
-	char* s = (char*)key;
+	char* s = ((struct element*)(key))->str;
 	int sum = 0, i;
 	for(i = 0; i < LEN; i++)
 		sum = sum + s[i];
@@ -18,10 +23,16 @@ int hashing(data* key)
 
 int key_equal(data* key1, data* key2)
 {
-	return !(strcmp((char*)key1, (char*)key2));
+	if((key1 == NULL) || (key2 == NULL))
+		return 0;
+	char* s1 = ((struct element*)(key1))->str;
+	char* s2 = ((struct element*)(key2))->str;
+	return !(strcmp(s1, s2));
 }
 
-int main(int ac, char** name)
+
+
+int main()
 {
 	FILE* f = stdin;
 	map* T = hash_create(hashing, key_equal);
@@ -45,14 +56,24 @@ int main(int ac, char** name)
 			{
 				in_word = 0;
 				string[i] = '\0';
-				T->insert(T, (data*)string);
+				struct element* inp = malloc(sizeof(struct element));
+				inp->str = string;
+				inp->val = 1;
+				map_enter* u;
+				u = T->search(T, (data*)inp);
+				if(u != NULL)
+				{
+					((struct element*)(u->get_val(u)))->val += 1;
+				}
+				else
+					T->insert(T, (data*)inp);
 				i = 0;
 			}
 	}
 
 	map_enter* j;
 	for(j = T->first(T); j != T->end(T); j = T->get_next(T, j))
-		printf("%s\n", (char*)(j->get_val(j)));
+		printf("%s %d\n", ((struct element*)(j->get_val(j)))->str, ((struct element*)(j->get_val(j)))->val);
 
 	return 0;
 }
